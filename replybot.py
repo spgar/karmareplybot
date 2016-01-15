@@ -28,10 +28,8 @@ MAXPOSTS = 100
 # This is how many posts you want to retrieve all at once. PRAW can download 100 at a time.
 WAIT = 30
 # This is how many seconds you will wait between cycles. The bot is completely inactive during this time.
-MINLINKKARMA = 0
-# Minimum link karma author must have to trigger reply
-MINCOMMENTKARMA = 0
-# Minimum comment karma author must have to trigger reply
+MINSCORE = 100
+# Minimum comment score must have to trigger reply
 
 CLEANCYCLES = 10
 # After this many cycles, the bot will clean its database
@@ -79,13 +77,8 @@ def replybot():
             # This post was not made by a keyauthor
             continue
 
-        redditor = r.get_redditor(pauthor)
-        if redditor.link_karma < MINLINKKARMA:
-            # Author does not meet minimum link karma requirement
-            continue
-
-        if redditor.comment_karma < MINCOMMENTKARMA:
-            # Author does not meet minimum comment karma requirement
+        if post.score < MINSCORE:
+            # Comment does not meet minimum score requirement
             continue
 
         cur.execute('SELECT * FROM oldposts WHERE ID=?', [pid])
