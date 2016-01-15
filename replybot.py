@@ -28,8 +28,10 @@ MAXPOSTS = 100
 # This is how many posts you want to retrieve all at once. PRAW can download 100 at a time.
 WAIT = 30
 # This is how many seconds you will wait between cycles. The bot is completely inactive during this time.
-MINSCORE = 100
-# Minimum comment score must have to trigger reply
+MINUPVOTES = 0
+# Minimum upvotes comment must have to trigger reply
+MINDOWNVOTES = 0
+# Minimum upvotes comment must have to trigger reply
 
 CLEANCYCLES = 10
 # After this many cycles, the bot will clean its database
@@ -77,8 +79,12 @@ def replybot():
             # This post was not made by a keyauthor
             continue
 
-        if post.score < MINSCORE:
-            # Comment does not meet minimum score requirement
+        if post.ups < MINUPVOTES:
+            # Comment does not meet minimum upvote requirement
+            continue
+
+        if post.downs < MINDOWNVOTES:
+            # Comment does not meet minimum downvote requirement
             continue
 
         cur.execute('SELECT * FROM oldposts WHERE ID=?', [pid])
